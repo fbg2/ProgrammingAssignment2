@@ -15,14 +15,46 @@
 ##
 ################################################################################
 makeCacheMatrix <- function(x = matrix()) {
+  
+  # initialize the cached inverse to NULL
+  # this value will be used to signal the helper function
+  # below, that the inverse has not been computed yet
   theInverse <- NULL
+  
+  # the set "method" for this "class"
   set <- function(y) {
+    # stores the provided value y in the environment
+    # one level up from the set function, hence
+    # in the environment of makeCacheMatrix, since "x"
+    # exists in that environment
     x <<- y
+    
+    # (re)sets the cached inverse to NULL, storing it
+    # in the environment one level up from the set
+    # function, hence in the environment of
+    # makeCacheMatrix since "theInverse" exists there
     theInverse <<- NULL
   }
+  
+  # the get "method" for this "class".  Just returns the
+  # value of x, which amounts to the value of x in the parent
+  # environment
   get <- function() x
+  
+  # the setinverse "method" for this "class".  
+  # stores the provided value inv in the environment
+  # one level up from the setinverse function, hence
+  # in the environment of makeCacheMatrix, since
+  # "theInverse" exists in that environment
   setinverse <- function(inv) theInverse <<- inv
+  
+  # the getinverse "method" for this "class".  Just
+  # returns the value of theInverse, which amounts to
+  # the value of theInverse in the parent environment
   getinverse <- function() theInverse
+  
+  # the return value of this "class" creation function,
+  # which is really a list of methods as descrbied above
   list(set = set, get = get,
        setinverse = setinverse,
        getinverse = getinverse)
@@ -36,6 +68,7 @@ makeCacheMatrix <- function(x = matrix()) {
 ## Output: the inverse of the matrix stored in x
 ##
 ##   ---------------
+##
 ## calculates the inverse  of the special "matrix" created with the above
 ## function. However, it first checks to see if the inverse has already been
 ## calculated. If so, it gets the inverse from the cache and skips the
